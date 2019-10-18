@@ -43,7 +43,7 @@ articulatory_classes["vowel"] = vowels  # fake to weight this higher
 
 # init the vector space
 dimensionality = 200
-sparseness = 20
+sparseness = 200
 itemtable = {}
 permutationtable = {}
 
@@ -160,24 +160,33 @@ def sequenceadditivevector(sequence:str, permutation:list):
 
 
 
-# bag of characters, baseline
-test_character_presence = True
+# hypothesis: "bag of characters", baseline --- containing the same characters is an indication of closeness
+test_character_presence = False
 
 # hypothesis: vowels are more important than other items for token similarity
 test_vowel_sequence = True
 
-# bigrams and trigrams
+# hypothesis: bigrams and trigrams of characters are useful
 test_ngrams = True
 
 # hypothesis: characters in the beginning of the token are more important that later ones
 # if this constant is set to zero all characters are equal, if more than zero, weight tapers off towards end of token
 # decremented at each vowel encountered (approximating syllables)
-test_descent = 0.1
+test_descent = 0.3
+
+# hypothesis: some suffixes can be disregarded entirely
+test_skip_suffixes = True
+skippables = ["ing", "ed"]
 
 def process(token:str):
     global descent, itemtable, permutationtable
     vector = numpy.zeros(dimensionality)
     vowelsequence = ""
+    if test_skip_suffixes and token.endswith(tuple(skippables)):  # double test not to have iterate over skippables
+        for tc in skippables:
+            if token.endswith(tc):
+                token = token[:-len(tc)]
+                break
     for c in token:
         if test_character_presence:
             try:
