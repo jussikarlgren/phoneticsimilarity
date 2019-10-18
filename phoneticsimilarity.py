@@ -38,7 +38,7 @@ articulatory_classes["mid"] = "eöoå"
 articulatory_classes["open"] = "äa"
 articulatory_classes["rounded"] = "yuüåoö"
 articulatory_classes["unrounded"] = "ieäa"
-articulatory_classes["vowel"] = vokaler  # fake to weight this higher
+articulatory_classes["vowel"] = vowels  # fake to weight this higher
 
 
 # init the vector space
